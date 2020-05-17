@@ -12,6 +12,9 @@ Follow instructions to install the latest version of python for your platform in
 
 We recommend working within a virtual environment whenever using Python for projects. This keeps your dependencies for each project separate and organaized. Instructions for setting up a virual enviornment for your platform can be found in the [python docs](https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/)
 
+cd backend
+env\scripts\activate
+
 #### PIP Dependencies
 
 Once you have your virtual environment setup and running, install dependencies by naviging to the `/backend` directory and running:
@@ -87,7 +90,113 @@ GET '/categories'
 '5' : "Entertainment",
 '6' : "Sports"}
 
-```
+Create an endpoint to handle GET requests 
+  for all available categories.
+  
+  @app.route("/", methods=['GET'])
+  @cross_origin()
+  def get_allcategories():
+      return jsonify({'message':'Hello, World!'})
+
+
+
+  
+  
+  Create an endpoint to handle GET requests for questions, 
+  including pagination (every 10 questions). 
+  This endpoint should return a list of questions, 
+  number of total questions, current category, categories. 
+
+  TEST: At this point, when you start the application
+  you should see questions and categories generated,
+  ten questions per page and pagination at the bottom of the screen for three pages.
+  Clicking on the page numbers should update the questions. 
+  
+  @app.route("/questions", methods=['GET'])
+  @cross_origin()
+  def get_allquestions():
+    page = request.args.get('page',1,type=int)
+    return jsonify({'message':'Hello, World!'})
+
+
+  
+  
+  Create an endpoint to DELETE question using a question ID. 
+
+  TEST: When you click the trash icon next to a question, the question will be removed.
+  This removal will persist in the database and when you refresh the page. 
+  
+  @app.route("/questions/<int:question_id>", methods=['DELETE'])
+  @cross_origin()
+  def delete_question(question_id):
+      return jsonify({'message':'Hello, World!'})
+
+
+  
+  
+  Create an endpoint to POST a new question, 
+  which will require the question and answer text, 
+  category, and difficulty score.
+
+  TEST: When you submit a question on the "Add" tab, 
+  the form will clear and the question will appear at the end of the last page
+  of the questions list in the "List" tab.  
+  
+  @app.route("/questions/create", methods=['POST'])
+  @cross_origin()
+  def create_question():
+    return jsonify({'message':'Hello, World!'})
+
+
+  
+  
+  Create a POST endpoint to get questions based on a search term. 
+  It should return any questions for whom the search term 
+  is a substring of the question. 
+
+  TEST: Search by any phrase. The questions list will update to include 
+  only question that include that string within their question. 
+  Try using the word "title" to start. 
+  
+  @app.route("/questions/search", methods=['POST'])
+  @cross_origin()
+  def search_questions():
+    return jsonify({'message':'Hello, World!'})
+
+
+  
+  
+  Create a GET endpoint to get questions based on category. 
+
+  TEST: In the "List" tab / main screen, clicking on one of the 
+  categories in the left column will cause only questions of that 
+  category to be shown. 
+  
+  GET /categories/<int:id>/questions
+  
+
+
+  
+  
+  Create a POST endpoint to get questions to play the quiz. 
+  This endpoint should take category and previous question parameters 
+  and return a random questions within the given category, 
+  if provided, and that is not one of the previous questions. 
+
+  TEST: In the "Play" tab, after a user selects "All" or a category,
+  one question at a time is displayed, the user is allowed to answer
+  and shown whether they were correct or not. 
+  
+  @app.route("/play", methods=['POST'])
+  @cross_origin()
+  def play_trivia():
+    return jsonify({'message':'Hello, World!'})
+
+
+  
+  
+  Create error handlers for all expected errors 
+  including 404 and 422. 
 
 
 ## Testing
@@ -98,3 +207,14 @@ createdb trivia_test
 psql trivia_test < trivia.psql
 python test_flaskr.py
 ```
+
+## Errors
+
+# No application found. Either work inside a view function or push an application context.
+https://flask-sqlalchemy.palletsprojects.com/en/2.x/contexts/
+
+# KeyError: 'SQLALCHEMY_TRACK_MODIFICATIONS'
+https://stackoverflow.com/questions/45274152/flask-sqlalchemy-keyerror-sqlalchemy-track-modifications
+
+# Handling imports in __init__.py
+from backend.models import setup_db, Question, Category

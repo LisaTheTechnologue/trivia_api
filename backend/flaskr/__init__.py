@@ -1,10 +1,11 @@
 import os
 from flask import Flask, request, abort, jsonify
 from flask_sqlalchemy import SQLAlchemy
-from flask_cors import CORS
+from flask_cors import CORS, cross_origin
 import random
 
 from models import setup_db, Question, Category
+
 
 QUESTIONS_PER_PAGE = 10
 
@@ -13,25 +14,34 @@ def create_app(test_config=None):
   app = Flask(__name__)
   setup_db(app)
 
-  # CORS
-  app = Flask(__name__, instance_relative_config=True)
-  #CORS(app,resources={r'*/api/*': {origins: '*'}})
+  ## to use db
+  db = SQLAlchemy(app)
+  ## CORS
   CORS(app)
 
   @app.after_request
   def after_request(response):
-    response.headers.add['Access-Control-Allow-Headers','Content_type,Authorization']
-    response.headers.add('Access-Control-Allow-Headers','GET,POST,PATCH,DELETE,OPTIONS')
+    response.headers.add('Access-Control-Allow-Headers','*')
+
     return response
   '''
   @TODO: 
   Create an endpoint to handle GET requests 
   for all available categories.
   '''
-  @app.route("/hello")
+  @app.route("/categories", methods=['GET'])
   @cross_origin()
-  def get_greeting():
-      return jsonify({'message':'Hello, World!'})
+  def get_allcategories():
+    categories = {}
+    for c in Category.query.all():
+      categories[c.id] = c.type
+      if (len(categories) == 0):
+        abort(404)
+    return jsonify({
+    'success': True,
+    'categories': categories
+    })
+    
 
 
 
@@ -47,10 +57,11 @@ def create_app(test_config=None):
   ten questions per page and pagination at the bottom of the screen for three pages.
   Clicking on the page numbers should update the questions. 
   '''
-  @app.route("/hello")
+  @app.route("/questions", methods=['GET'])
   @cross_origin()
-  def get_greeting():
-      return jsonify({'message':'Hello, World!'})
+  def get_allquestions():
+    page = request.args.get('page',QUESTIONS_PER_PAGE,type=int)
+    return jsonify({'message':'Hello, World!'})
 
 
   '''
@@ -60,9 +71,9 @@ def create_app(test_config=None):
   TEST: When you click the trash icon next to a question, the question will be removed.
   This removal will persist in the database and when you refresh the page. 
   '''
-  @app.route("/hello")
+  @app.route("/questions/<int:question_id>", methods=['DELETE'])
   @cross_origin()
-  def get_greeting():
+  def delete_question(question_id):
       return jsonify({'message':'Hello, World!'})
 
 
@@ -76,9 +87,9 @@ def create_app(test_config=None):
   the form will clear and the question will appear at the end of the last page
   of the questions list in the "List" tab.  
   '''
-  @app.route("/hello")
+  @app.route("/questions/create", methods=['POST'])
   @cross_origin()
-  def get_greeting():
+  def create_question():
     return jsonify({'message':'Hello, World!'})
 
 
@@ -92,9 +103,9 @@ def create_app(test_config=None):
   only question that include that string within their question. 
   Try using the word "title" to start. 
   '''
-  @app.route("/hello")
+  @app.route("/questions/search", methods=['POST'])
   @cross_origin()
-  def get_greeting():
+  def search_questions():
     return jsonify({'message':'Hello, World!'})
 
 
@@ -106,9 +117,9 @@ def create_app(test_config=None):
   categories in the left column will cause only questions of that 
   category to be shown. 
   '''
-  @app.route("/hello")
+  @app.route("/categories/<int:id>/questions",  methods=['GET'])
   @cross_origin()
-  def get_greeting():
+  def get_questions_by_category():
     return jsonify({'message':'Hello, World!'})
 
 
@@ -124,9 +135,9 @@ def create_app(test_config=None):
   one question at a time is displayed, the user is allowed to answer
   and shown whether they were correct or not. 
   '''
-  @app.route("/hello")
+  @app.route("/play", methods=['POST'])
   @cross_origin()
-  def get_greeting():
+  def play_trivia():
     return jsonify({'message':'Hello, World!'})
 
 

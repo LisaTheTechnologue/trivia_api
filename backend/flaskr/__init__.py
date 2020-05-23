@@ -36,11 +36,9 @@ def create_app(test_config=None):
   @app.route("/categories")
   def get_categories():
     categories = Category.query.all()
-    catgs = []
-    for c in categories:
-      catgs.append(c.type)
+    formatted_categories = {category.id: category.type for category in categories}
     return jsonify({'success': True,
-                    'categories': catgs
+                    'categories': formatted_categories
                     })
 
   # view questions
@@ -53,14 +51,14 @@ def create_app(test_config=None):
       abort(404)
 
     categories = Category.query.all()
-    catgs = []
+    # formatted_categories = [question.format() for question in selection]
+    formatted_categories = []
     for c in categories:
-      catgs.append(c.type)
-
+      formatted_categories.append(c.type)
     return jsonify({
         'success':True,
         'questions': current_questions,
-        'categories':catgs,
+        'categories':formatted_categories,
         'total_questions': len(selection)
         })
 
@@ -128,24 +126,26 @@ def create_app(test_config=None):
   @app.route("/categories/<int:category_id>/questions")
   def get_questions_by_category(category_id):
     try:
-      category_id = category_id +1
+      category_id = category_id + 1
       selection = Question.query.filter(Question.category==category_id).all()
      
       categories = Category.query.all()
-      catgs = []
+      # formatted_categories = [question.format() for question in selection]
+      formatted_categories = []
       for c in categories:
-        catgs.append(c.type)
+        formatted_categories.append(c.type)
       current_questions = paginate_questions(request,selection)
       return jsonify({
                       'success':True,
                       'questions': current_questions,
-                      'categories':catgs,
+                      'categories':formatted_categories,
                       'current_category': category_id,
                       'total_questions': len(selection)
                       })
     except BaseException:
             abort(422)
 
+  # Quiz view
   @app.route("/quizzes", methods=['GET','POST'])
   def play_trivia():
     body = request.get_json()
@@ -155,7 +155,8 @@ def create_app(test_config=None):
     category_id = body['quiz_category']['id']
     category_id = str(int(category_id))
 
-    if category_id == 0:
+    # select ALL
+    if category_id == "0":
       if previous_q is not None:
         questions = Question.query.filter(
             Question.id.notin_(previous_q)).all()
@@ -170,13 +171,11 @@ def create_app(test_config=None):
         questions = Question.query.filter(
             Question.category == category_id).all()
 
-    # check if questions/random is empty then questions -> false to force End in QuizView 
-    if not questions: # emty list
+    if not questions: # empty list
       next_question = False
-      print(next_question)
     else:
       next_question = random.choice(questions).format()
-    
+
     return jsonify({
         'success': True,
         'question': next_question

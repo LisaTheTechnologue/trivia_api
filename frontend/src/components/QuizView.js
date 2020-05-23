@@ -7,7 +7,7 @@ const questionsPerPlay = 5;
 
 class QuizView extends Component {
   constructor(props){
-    super();
+    super(props);
     this.state = {
         quizCategory: null,
         previousQuestions: [], 
@@ -22,7 +22,7 @@ class QuizView extends Component {
 
   componentDidMount(){
     $.ajax({
-      url: `/categories`, //TODO: update request URL
+      url: `/categories`, 
       type: "GET",
       success: (result) => {
         this.setState({ categories: result.categories })
@@ -133,6 +133,7 @@ class QuizView extends Component {
   evaluateAnswer = () => {
     const formatGuess = this.state.guess.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"").toLowerCase()
     const answerArray = this.state.currentQuestion.answer.toLowerCase().split(' ');
+    alert("guess " + formatGuess + " answer " + answerArray)
     return answerArray.includes(formatGuess)
   }
 

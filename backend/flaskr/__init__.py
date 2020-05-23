@@ -146,7 +146,7 @@ def create_app(test_config=None):
             abort(422)
 
   # Quiz view
-  @app.route("/quizzes", methods=['GET','POST'])
+  @app.route("/quizzes", methods=['POST'])
   def play_trivia():
     body = request.get_json()
     if not body:

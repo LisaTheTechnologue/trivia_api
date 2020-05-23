@@ -146,7 +146,7 @@ Setting the `FLASK_APP` variable to `flaskr` directs flask to use the `flaskr` d
 To run the tests, run
 ```
 dropdb trivia_test
-createdb trivia_test
+createdb --username=postgres -W trivia_test
 psql trivia_test < trivia.psql
 python test_flaskr.py
 ```

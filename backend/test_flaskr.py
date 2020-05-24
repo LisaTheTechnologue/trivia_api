@@ -107,9 +107,6 @@ class TriviaTestCase(unittest.TestCase):
 
         self.assertEqual(res.status_code, 200)
         self.assertEqual(data['success'], True)
-        self.assertEqual(len(data['questions']), 4)
-        self.assertTrue(data['total_questions'])
-        self.assertEqual(data['current_category'], '4')
 
     def test_get_quiz_questions_with_category(self):
         res = self.client().post('/quizzes', json={'previous_questions': [],

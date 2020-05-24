@@ -134,7 +134,6 @@ class QuizView extends Component {
   evaluateAnswer = () => {
     const formatGuess = this.state.guess.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"").toLowerCase()
     const answerArray = this.state.currentQuestion.answer.toLowerCase().split(' ');
-    alert("guess " + formatGuess + " answer " + answerArray)
     return answerArray.includes(formatGuess)
   }
 
